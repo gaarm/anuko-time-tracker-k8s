@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anuko-timetracker-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: anuko-timetracker-db
+  template:
+    metadata:
+      labels:
+        name: anuko-timetracker-db
+    spec:
+      containers:
+        - name: anuko-timetracker-db
+          image: anuko_database:1.18.36
+          imagePullPolicy: Never
+#          env:
+#            - name: ENVIRONMENT
+#              valueFrom:
+#                configMapKeyRef:
+#                  name: env-data
+#                  key: ENVIRONMENT
+          ports:
+            - containerPort: 3306
+              protocol: TCP
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: anuko-timetracker-db
+  labels:
+    app: anuko-timetracker-db
+spec:
+  type: NodePort
+  ports:
+    - name: external
+      port: 3306
+      targetPort: 3306
+  selector:
+    app: anuko-timetracker-db
