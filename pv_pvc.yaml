@@ -11,7 +11,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/c/workspace/personal/anuko-time-tracker-k8s/data"
+    path: "/mnt/data"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

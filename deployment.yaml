@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anuko-timetracker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: anuko-timetracker
+  template:
+    metadata:
+      labels:
+        name: anuko-timetracker
+    spec:
+      containers:
+        - name: anuko-timetracker
+          image: anuko_timetracker:1.18.36
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: anuko-timetracker
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: anuko-timetracker
+  clusterIP: None
